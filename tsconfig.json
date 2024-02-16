@@ -1,0 +1,10 @@
+{
+   "compilerOptions": {
+       "target": "ESnext",
+       "module":"ESnext",
+       "outDir": "./dist",
+       "noImplicitAny": true,
+       "removeComments": true
+   },
+   "include": ["src/**/*"]
+}
