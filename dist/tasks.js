@@ -1,7 +1,9 @@
+// deno-lint-ignore-file
 import { todoCount, taskInput, todoList } from './dom.js';
 import { saveTasks } from './db.js';
 import { taskTemplate } from './templates.js';
 import { DEV, ctx, on } from './context.js';
+/** Add a new task */
 export function addTask(newTask, topics = false) {
     if (topics)
         newTask = `${newTask}
@@ -14,6 +16,7 @@ export function addTask(newTask, topics = false) {
     taskInput.focus();
     refreshDisplay();
 }
+/** Display all tasks */
 export function refreshDisplay() {
     todoList.innerHTML = "";
     if (ctx.tasks && ctx.tasks.length > 0) {
@@ -21,8 +24,10 @@ export function refreshDisplay() {
             const p = document.createElement("p");
             p.innerHTML = taskTemplate(index, item);
             on(p, 'click', (e) => {
+                // lets the checkbox-change handler below work
                 if (e.target.type === 'checkbox')
                     return;
+                // ignore all `textarea` elements
                 if (e.target.type === 'textarea')
                     return;
                 const todoItem = e.target;
@@ -44,6 +49,7 @@ export function refreshDisplay() {
                     refreshDisplay();
                 });
             });
+            // handle the `completed` checkbox change event
             on(p.querySelector(".todo-checkbox"), "change", (e) => {
                 e.preventDefault();
                 const index = e.target.dataset.index;
@@ -53,5 +59,6 @@ export function refreshDisplay() {
             todoList.appendChild(p);
         });
     }
+    // update the task count
     todoCount.textContent = "" + ctx.tasks.length;
 }

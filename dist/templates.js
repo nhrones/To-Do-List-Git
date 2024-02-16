@@ -1,3 +1,4 @@
+/** build a task element template string */
 export function taskTemplate(index, item) {
     const { disabled, text } = item;
     return `

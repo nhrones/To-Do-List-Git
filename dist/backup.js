@@ -1,5 +1,10 @@
 import { restoreCache, todoCache } from './kvCache.js';
+/**NEW
+ * export data from persitence
+ * @returns void - calls saveDataFile()
+ */
 export function backupData() {
+    // get all todo records
     const jsonData = JSON.stringify(Array.from(todoCache.entries()));
     const link = document.createElement("a");
     const file = new Blob([jsonData], { type: 'application/json' });
@@ -8,6 +13,9 @@ export function backupData() {
     link.click();
     URL.revokeObjectURL(link.href);
 }
+/**
+ * import data from backup file
+ */
 export function restoreData() {
     const fileload = document.getElementById('fileload');
     fileload.click();

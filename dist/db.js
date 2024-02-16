@@ -3,9 +3,19 @@ import { refreshDisplay } from './tasks.js';
 import { popupText, popupDialog } from './dom.js';
 import { initCache, getFromCache, setCache } from './kvCache.js';
 import { DEV, ctx } from './context.js';
+/**
+ * init Data
+ * Hydrates cache data from IDB
+ */
 export async function initDB() {
+    // hydrate from db
     await initCache();
 }
+/**
+ * Retrieve array of tasks from the service
+ * or initialize an empty task array
+ * @param {string} key the name of the record to fetch (data-key)
+ */
 export function getTasks(key = "") {
     ctx.thisKeyName = key;
     if (key.length) {
@@ -19,6 +29,9 @@ export function getTasks(key = "") {
         refreshDisplay();
     }
 }
+/**
+ * build a set of select options
+ */
 export function buildTopics() {
     const data = getFromCache("topics");
     resetTopicSelect();
@@ -27,6 +40,12 @@ export function buildTopics() {
         addOptionGroup(parsedTopics.group, parsedTopics.entries);
     }
 }
+/**
+ * parseTopics
+ * @param topics - array
+ * @returns array
+ */
+// deno-lint-ignore no-explicit-any
 function parseTopics(topics) {
     const topicObject = { group: "", entries: [] };
     const thisTopic = topics;
@@ -45,9 +64,13 @@ function parseTopics(topics) {
     }
     return topicObject;
 }
+/** Save all tasks */
 export function saveTasks(topicChanged) {
     setCache(ctx.thisKeyName, ctx.tasks, topicChanged);
 }
+/**
+ * Delete completed tasks
+ */
 export function deleteCompleted() {
     const savedtasks = [];
     let numberDeleted = 0;

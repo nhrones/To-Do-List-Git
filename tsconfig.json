@@ -1,10 +1,12 @@
 {
    "compilerOptions": {
-       "target": "ESnext",
-       "module":"ESnext",
-       "outDir": "./dist",
-       "noImplicitAny": true,
-       "removeComments": true
+      "target": "ESnext",
+      "module": "ESnext",
+      "outDir": "./dist",
+      "noImplicitAny": true,
+      "removeComments": false
    },
-   "include": ["src/**/*"]
+   "include": [
+      "src/**/*"
+   ]
 }
