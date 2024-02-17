@@ -21,6 +21,7 @@ export async function initCache() {
 export function restoreCache(records) {
     const tasksObj = JSON.parse(records);
     todoCache = new Map(tasksObj);
+    //console.log(`restoreCache -> persit!`)
     persist();
 }
 
@@ -47,7 +48,6 @@ export function setCache(key, value, topicChanged = false) {
 async function hydrate() {
     // make a call to get our json data
     const result = await Git.readFile(ctx)
-    //console.log(`dbCache.hydrate -- result = ${result}`);
     // load our local cache
     todoCache = new Map(JSON.parse(`${result}`));
     buildTopics();
@@ -60,5 +60,6 @@ async function persist() {
     // get the complete cache-Map
     const todoArray = Array.from(todoCache.entries());
     ctx.content = btoa(JSON.stringify(todoArray));
+    //console.log(`persiting`)
     Git.writeFile(ctx)
 }
