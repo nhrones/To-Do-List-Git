@@ -1,7 +1,7 @@
 import { addOptionGroup, resetTopicSelect } from './selectBuilder.js';
 import { refreshDisplay } from './tasks.js';
 import { popupText, popupDialog } from './dom.js';
-import { initCache, getFromCache, setCache } from './kvCache.js';
+import { initCache, getFromCache, setCache } from './dbCache.js';
 import { DEV, ctx } from './context.js';
 /**
  * init Data
@@ -11,6 +11,7 @@ export async function initDB() {
     // hydrate from db
     await initCache();
 }
+
 /**
  * Retrieve array of tasks from the service
  * or initialize an empty task array
@@ -29,6 +30,7 @@ export function getTasks(key = "") {
         refreshDisplay();
     }
 }
+
 /**
  * build a set of select options
  */
