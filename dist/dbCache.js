@@ -47,7 +47,7 @@ export function setCache(key, value, topicChanged = false) {
 async function hydrate() {
     // make a call to get our json data
     const result = await Git.readFile(ctx)
-    console.log(`dbCache.hydrate -- result = ${result}`);
+    //console.log(`dbCache.hydrate -- result = ${result}`);
     // load our local cache
     todoCache = new Map(JSON.parse(`${result}`));
     buildTopics();
