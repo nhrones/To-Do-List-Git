@@ -8,7 +8,7 @@ import {ctx} from './gitContext.js'
 //            owner    repo               file-path
 ctx.owner = 'nhrones'
 ctx.repo = 'TodoJson'
-ctx.path = 'test.json'
+ctx.path = 'todos.json'
 
 export let todoCache = new Map();
 
