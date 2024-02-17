@@ -1,8 +1,21 @@
-/// <reference lib="dom" />
+
 import { addTask, refreshDisplay } from './tasks.js';
 import { deleteCompleted, initDB, getTasks } from './db.js';
 import { backupData, restoreData } from './backup.js';
-import { DEV, currentTopic, on, setCurrentTopic, $ } from './context.js';
+import { DEV } from './constants.js';
+
+export let currentTopic = "topics"
+export function setCurrentTopic(topic){
+   currentTopic = topic
+}
+
+/** Shortcut for document.getElementById */
+const $ = (id) => document.getElementById(id)
+
+/** on - adds an event handler to an htmlElement */
+const on = ( elem, event, listener) => {
+   return elem.addEventListener(event, listener)
+}
 
 /* create references for all UI elements */
 export const backupBtn = $("backupbtn");

@@ -1,8 +1,13 @@
 // deno-lint-ignore-file
-import { todoCount, taskInput, todoList } from './dom.js';
+import { currentTopic , todoCount, taskInput, todoList } from './dom.js';
 import { saveTasks } from './db.js';
 import { taskTemplate } from './templates.js';
-import { DEV, currentTopic, on } from './context.js';
+import { DEV } from './constants.js';
+
+/** on - adds an event handler to an htmlElement */
+const on = ( elem, event, listener) => {
+   return elem.addEventListener(event, listener)
+}
 
 export let tasks = []
 export function setTasks(data){
