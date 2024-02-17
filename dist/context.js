@@ -1,17 +1,12 @@
 
-//export const KV_URL = 'kv-ws-rpc.deno.dev' 
 export const DEV = true
 
-/** app context object */
-export const ctx = {
-   currentTopic: "topics",
-   TopicKey: 'topics',
-   DbKey: ['TODOS'],
-   nextTxId: 0,
-   thisKeyName: '',
-   tasks: [],
-}
+export const tasks = []
 
+export let currentTopic = "topics"
+export function setCurrentTopic(topic) {
+   currentTopic = topic
+}
 /** Shortcut for document.getElementById */
 export const $ = (id) => document.getElementById(id)
 

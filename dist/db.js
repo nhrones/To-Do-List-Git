@@ -1,8 +1,11 @@
 import { addOptionGroup, resetTopicSelect } from './selectBuilder.js';
-import { refreshDisplay } from './tasks.js';
+import { refreshDisplay, setTasks, tasks } from './tasks.js';
 import { popupText, popupDialog } from './dom.js';
 import { initCache, getFromCache, setCache } from './dbCache.js';
-import { DEV, ctx } from './context.js';
+import { currentTopic, DEV } from './context.js';
+let thisKeyName = ''
+
+
 /**
  * init Data
  * Hydrates cache data from IDB
@@ -18,15 +21,15 @@ export async function initDB() {
  * @param {string} key the name of the record to fetch (data-key)
  */
 export function getTasks(key = "") {
-    ctx.thisKeyName = key;
+    thisKeyName = key;
     if (key.length) {
         let data = getFromCache(key) ?? [];
         if (data === null) {
             if (DEV)
-                console.log(`No data found for ${ctx.thisKeyName}`);
+                console.log(`No data found for ${thisKeyName}`);
             data = [];
         }
-        ctx.tasks = data;
+        setTasks ( data );
         refreshDisplay();
     }
 }
@@ -68,7 +71,7 @@ function parseTopics(topics) {
 }
 /** Save all tasks */
 export function saveTasks(topicChanged) {
-    setCache(ctx.thisKeyName, ctx.tasks, topicChanged);
+    setCache(thisKeyName, tasks, topicChanged);
 }
 /**
  * Delete completed tasks
@@ -76,7 +79,7 @@ export function saveTasks(topicChanged) {
 export function deleteCompleted() {
     const savedtasks = [];
     let numberDeleted = 0;
-    ctx.tasks.forEach((task) => {
+    tasks.forEach((task) => {
         if (task.disabled === false) {
             savedtasks.push(task);
         }
@@ -84,8 +87,8 @@ export function deleteCompleted() {
             numberDeleted++;
         }
     });
-    ctx.tasks = savedtasks;
-    saveTasks((ctx.currentTopic === 'topics'));
+    setTasks( savedtasks );
+    saveTasks((currentTopic === 'topics'));
     popupText.textContent = `Removed ${numberDeleted} tasks!`;
     popupDialog.showModal();
 }

@@ -2,7 +2,12 @@
 import { todoCount, taskInput, todoList } from './dom.js';
 import { saveTasks } from './db.js';
 import { taskTemplate } from './templates.js';
-import { DEV, ctx, on } from './context.js';
+import { DEV, currentTopic, on } from './context.js';
+
+export let tasks = []
+export function setTasks(data){
+   tasks = data
+}
 /** Add a new task */
 export function addTask(newTask, topics = false) {
     if (topics)
@@ -10,7 +15,7 @@ export function addTask(newTask, topics = false) {
       newTopic, newKey`;
     if (DEV)
         console.log('added task ', newTask);
-    ctx.tasks.unshift({ text: newTask, disabled: false });
+    tasks.unshift({ text: newTask, disabled: false });
     saveTasks(topics);
     taskInput.value = "";
     taskInput.focus();
@@ -19,8 +24,8 @@ export function addTask(newTask, topics = false) {
 /** Display all tasks */
 export function refreshDisplay() {
     todoList.innerHTML = "";
-    if (ctx.tasks && ctx.tasks.length > 0) {
-        ctx.tasks.forEach((item, index) => {
+    if (tasks && tasks.length > 0) {
+        tasks.forEach((item, index) => {
             const p = document.createElement("p");
             p.innerHTML = taskTemplate(index, item);
             on(p, 'click', (e) => {
@@ -31,7 +36,7 @@ export function refreshDisplay() {
                 if (e.target.type === 'textarea')
                     return;
                 const todoItem = e.target;
-                const existingText = ctx.tasks[index].text;
+                const existingText = tasks[index].text;
                 const editElement = document.createElement("textarea");
                 editElement.setAttribute("rows", "6");
                 editElement.setAttribute("cols", "62");
@@ -43,8 +48,8 @@ export function refreshDisplay() {
                 on(editElement, "blur", function () {
                     const updatedText = editElement.value.trim();
                     if (updatedText.length > 0) {
-                        ctx.tasks[index].text = updatedText;
-                        saveTasks((ctx.currentTopic === 'topics'));
+                        tasks[index].text = updatedText;
+                        saveTasks((currentTopic === 'topics'));
                     }
                     refreshDisplay();
                 });
@@ -53,12 +58,12 @@ export function refreshDisplay() {
             on(p.querySelector(".todo-checkbox"), "change", (e) => {
                 e.preventDefault();
                 const index = e.target.dataset.index;
-                ctx.tasks[index].disabled = !ctx.tasks[index].disabled;
+                tasks[index].disabled = !tasks[index].disabled;
                 saveTasks(false);
             });
             todoList.appendChild(p);
         });
     }
     // update the task count
-    todoCount.textContent = "" + ctx.tasks.length;
+    todoCount.textContent = "" + tasks.length;
 }
