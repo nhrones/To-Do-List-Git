@@ -18,8 +18,7 @@ export function addTask(newTask, topics = false) {
     if (topics)
         newTask = `${newTask}
       newTopic, newKey`;
-    if (DEV)
-        console.log('added task ', newTask);
+    if (DEV) console.log('added task ', newTask);
     tasks.unshift({ text: newTask, disabled: false });
     saveTasks(topics);
     taskInput.value = "";

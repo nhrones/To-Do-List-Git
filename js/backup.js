@@ -23,9 +23,9 @@ export function restoreData() {
    fileload.addEventListener('change', function () {
       const reader = new FileReader();
       reader.onload = function () {
-         //console.log('backup -> restoring')
+         console.log('backup -> restoring')
          restoreCache(reader.result);
-         //window.location.reload();
+         window.location.reload();
       };
       reader.readAsText(fileload.files[0]);
    });

@@ -51,9 +51,7 @@ export async function initDom() {
 
    // close button click handler
    on(closebtn, 'click', () => {
-      if (DEV)
-         console.log('closebtn clicked');
-      self.open(location.href, "_self", "");
+      self.open(location.href, "self", "");
       self.close();
    });
    // delete completed button click handler
@@ -61,6 +59,7 @@ export async function initDom() {
       deleteCompleted();
       refreshDisplay();
    });
+
    on(popupDialog, 'click', (event) => {
       event.preventDefault();
       popupDialog.close();
