@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
+import { DEV } from './constants.js'
 import { buildTopics } from './db.js';
 import * as Git from './gitFileIO.js'
 import { ctx } from './gitContext.js'
@@ -21,7 +22,7 @@ export async function initCache() {
 export function restoreCache(records) {
    const tasksObj = JSON.parse(records);
    todoCache = new Map(tasksObj);
-   //console.log(`restoreCache -> persit!`)
+   if (DEV) console.log(`restoreCache -> persit!`)
    persist();
 }
 
@@ -40,10 +41,9 @@ export const getFromCache = (key) => {
 /** The `set` method mutates - will call the `persist` method. */
 export function setCache(key, value, topicChanged = false) {
    todoCache.set(key, value);
-   //console.log('setCache calling persist')
+   if (DEV) console.log('setCache calling persist')
    persist(); //TODO removing completed topics does not persist?
-   if (topicChanged) {
-      //window.location.reload(); 
+   if (topicChanged) { 
       //TODO just reload topics
    }
 }
@@ -62,7 +62,9 @@ async function hydrate() {
 async function persist() {
    // get the complete cache-Map
    const todoArray = Array.from(todoCache.entries());
-   ctx.content = btoa(JSON.stringify(todoArray));
-   //console.log(`persiting, ctx =  ${JSON.stringify(ctx)}`)
-   Git.writeFile(ctx)
+
+   if (DEV) console.log(`persiting, ctx =  ${ctx.method}`)
+   
+   // Write the cache to Github
+   Git.writeFile(ctx, todoArray)
 }

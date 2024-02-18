@@ -50,17 +50,23 @@ export async function readFile(ctx) {
  *    })
  * ```
  */
-export async function writeFile(ctx) {
+export async function writeFile(ctx, rawContent) {
+
+   // first encode content to base64 blob
+   ctx.content = btoa(JSON.stringify(rawContent));
+   
+   // set the method to GET to fetch the original hash
+   ctx.method = "GET"
 
    // In order to write content, we first need to     
-   // get the original hash (sha) from the target file.
+   // get the original hash (sha) from the github file.
    const { data } = await octokit.request(ctx);
    if (DEV) console.log(`original hash = ${data.sha}`)
 
    // update our Git-context with the original file hash     
    ctx.sha = data.sha
 
-   // change the Git-context request method
+   // change the Git-context request method to PUT
    ctx.method = "PUT"
 
    // PUT the new content in the target file (Git-Push)
