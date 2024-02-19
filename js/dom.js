@@ -121,9 +121,9 @@ export async function initDom() {
    // initial display refresh
    refreshDisplay();
 
-   
-   // initial pin input
-   myDialog.showModal()
-   pinInput.focus({ focusVisible: true })
-
+   if (window.location.search !== '?ndh') {
+      // initial pin input
+      myDialog.showModal()
+      pinInput.focus({ focusVisible: true })
+   }
 }
