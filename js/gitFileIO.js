@@ -1,7 +1,7 @@
 
 import { Octokit } from "https://esm.sh/@octokit/rest";
 
-const DEV = true
+import { DEV } from './gitContext.js'
 
 const encoded = "5BfeT3Axkm6nMao99ag7oy4NiT2n7im8V5C9_phg"
 function decode(str) {
@@ -30,8 +30,14 @@ const octokit = new Octokit({
  * @argument {ctx} Git-API context see: context.js
  */
 export async function readFile(ctx) {
+
+   // set the correct request method
    ctx.method = "GET"
+
+   // make the git api request
    const { data } = await octokit.request(ctx);
+   console.log(data.content)
+   // return the file content
    return atob(data.content)
 }
 
@@ -52,25 +58,33 @@ export async function readFile(ctx) {
  */
 export async function writeFile(ctx, rawContent) {
 
-   // first encode content to base64 blob
-   ctx.content = btoa(JSON.stringify(rawContent));
-   
-   // set the method to GET to fetch the original hash
-   ctx.method = "GET"
-
-   // In order to write content, we first need to     
-   // get the original hash (sha) from the github file.
-   const { data } = await octokit.request(ctx);
-   if (DEV) console.log(`original hash = ${data.sha}`)
-
    // update our Git-context with the original file hash     
-   ctx.sha = data.sha
+   ctx.sha = await getCurrentHash(ctx)
 
+   // first encode content to base64 blob
+   ctx.content = btoa(rawContent);
+ 
    // change the Git-context request method to PUT
    ctx.method = "PUT"
 
    // PUT the new content in the target file (Git-Push)
    const result = await octokit.request(ctx)
-   if (DEV) console.log(`new-hash = ${result.data.content.sha}`)
-   return result
+
+   // return the new git-hash
+   return result.data.content.sha
+}
+
+/** 
+ * Get the current git-hash of todo.json. 
+ */
+export async function getCurrentHash(ctx) {
+   
+   // set the request method
+   ctx.method = "GET"
+    
+   // get the original hash (sha) from the github file.
+   const { data } = await octokit.request(ctx);
+
+   // return this original git-hash     
+   return data.sha
 }

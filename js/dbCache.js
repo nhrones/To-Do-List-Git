@@ -1,8 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
-import { DEV } from './constants.js'
 import { buildTopics } from './db.js';
 import * as Git from './gitFileIO.js'
-import { ctx } from './gitContext.js'
+import { ctx, DEV } from './gitContext.js'
 
 // set the context for our json file update
 // github.com/nhrones/TodoJson/blob/main/default2.json
@@ -42,15 +41,37 @@ export const getFromCache = (key) => {
 export function setCache(key, value, topicChanged = false) {
    todoCache.set(key, value);
    if (DEV) console.log('setCache calling persist')
-   persist(); //TODO removing completed topics does not persist?
+   persist();
    if (topicChanged) { 
       //TODO just reload topics
    }
 }
 /** hydrate a dataset from a remote json file */
 async function hydrate() {
+
+   //TODO first load local
+   // next check hash for change
+   // if changed, load from git
+   // store new hash local
+
    // make a call to get our json data
-   const result = await Git.readFile(ctx)
+   //const result = await Git.readFile(ctx)
+   let result = localStorage.getItem("todos");
+   const lastHash = localStorage.getItem("hash")
+
+   // next check hash for change
+   const currentGitHash = await Git.getCurrentHash(ctx)
+   console.log(`gitHash: ${currentGitHash}
+   localHash ${lastHash} ` );
+
+   // fetch any fresh data from github
+   if (lastHash === null || currentGitHash !== lastHash) {
+      console.log(`data not fresh!`)
+      result = await Git.readFile(ctx)
+      // refresh the localStore hash
+      localStorage.setItem("hash", currentGitHash)
+   }
+
    // load our local cache
    todoCache = new Map(JSON.parse(`${result}`));
    buildTopics();
@@ -60,11 +81,19 @@ async function hydrate() {
  * This is called for any mutation of the todoCache (set/delete)
  */
 async function persist() {
-   // get the complete cache-Map
-   const todoArray = Array.from(todoCache.entries());
 
-   if (DEV) console.log(`persiting, ctx =  ${ctx.method}`)
+   // update git hash 
+   ctx.sha = Git.getCurrentHash(ctx)
+   
+   // get cache-Map entries as array
+   const todoJson = JSON.stringify(Array.from(todoCache.entries()));
+   
+   // persist local
+   localStorage.setItem("todos", todoJson);
    
    // Write the cache to Github
-   Git.writeFile(ctx, todoArray)
+   const newHash = Git.writeFile(ctx, todoJson)
+   
+   // update local hash
+   localStorage.setItem("hash", newHash);
 }

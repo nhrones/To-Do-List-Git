@@ -14,8 +14,11 @@ export function backupData() {
    link.click();
    URL.revokeObjectURL(link.href);
 }
+
 /**
- * import data from backup file
+ * Restore data
+ *
+ * @export
  */
 export function restoreData() {
    const fileload = document.getElementById('fileload');

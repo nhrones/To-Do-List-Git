@@ -2,7 +2,7 @@
 import { currentTopic , todoCount, taskInput, todoList } from './dom.js';
 import { saveTasks } from './db.js';
 import { taskTemplate } from './templates.js';
-import { DEV } from './constants.js';
+import { DEV } from './gitContext.js'
 
 /** on - adds an event handler to an htmlElement */
 const on = ( elem, event, listener) => {

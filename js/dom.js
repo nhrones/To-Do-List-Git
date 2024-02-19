@@ -2,7 +2,7 @@
 import { addTask, refreshDisplay } from './tasks.js';
 import { deleteCompleted, initDB, getTasks } from './db.js';
 import { backupData, restoreData } from './backup.js';
-import { DEV } from './constants.js';
+import { DEV } from './gitContext.js'
 
 export let currentTopic = "topics"
 export function setCurrentTopic(topic){
@@ -32,6 +32,7 @@ export const myDialog = $('myDialog');
 export const popupText = $("popup_text");
 
 let pinOK = false
+let pinTryCount = 0
 
 /** initialize all UI and event handlers */
 export async function initDom() {
@@ -77,9 +78,10 @@ export async function initDom() {
       if (!pinOK) myDialog.showModal()
    });
 
-   // submit pin button keyup handler
+   // pin input keyup handler
    on(pinInput, 'keyup', (event) => {
       event.preventDefault()
+      pinTryCount += 1
       console.log('pinInput key:', event.key)
       if (event.key === "Enter" || pinInput.value === "1313") {
          console.log('pinInput.value = ', pinInput.value)
@@ -91,8 +93,19 @@ export async function initDom() {
             myDialog.close()
             pinInput.value = ""
             pinOK = false
-            popupText.textContent = `Incorrect pin entered!`
-            popupDialog.showModal()
+            popupText.textContent = (pinTryCount === 3)
+               ?`Incorrect pin entered ${pinTryCount} times!
+ Please close this Page!`
+               : `Incorrect pin entered!`
+
+             if  (pinTryCount === 3) {
+               document.body.innerHTML = `
+               <h1>Three failed PIN attempts!</h1>
+               <h1>Please close this page!</h1>`
+             } else {
+               popupDialog.showModal()
+               
+             }
          }
       }
    })
@@ -109,6 +122,8 @@ export async function initDom() {
    refreshDisplay();
 
    
-   // initial pin
+   // initial pin input
    myDialog.showModal()
+   pinInput.focus({ focusVisible: true })
+
 }

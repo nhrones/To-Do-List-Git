@@ -1,3 +1,8 @@
+/**
+ * flag for debug logging
+ * @type {boolean}
+ */
+export const DEV = true
 
 /** Standard option bag used by two Git-Requests */
 export const ctx = {

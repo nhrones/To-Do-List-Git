@@ -2,7 +2,7 @@ import { addOptionGroup, resetTopicSelect } from './selectBuilder.js';
 import { refreshDisplay, setTasks, tasks } from './tasks.js';
 import { currentTopic, popupText, popupDialog } from './dom.js';
 import { initCache, getFromCache, setCache } from './dbCache.js';
-import {  DEV } from './constants.js';
+import { DEV } from './gitContext.js'
 
 /** key name */
 let thisKeyName = ''
