@@ -125,5 +125,7 @@ export async function initDom() {
       // initial pin input
       myDialog.showModal()
       pinInput.focus({ focusVisible: true })
+   } else {
+      pinOK = true
    }
 }
