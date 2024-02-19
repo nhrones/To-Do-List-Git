@@ -25,7 +25,7 @@ export const todoCount = $("todoCount");
 export const todoList = $("todoList");
 export const deleteCompletedBtn = $("deletecompleted");
 export const topicSelect = $('topicselect');
-export const closebtn = $('closebtn');
+
 export const popupDialog = $('popupDialog');
 export const pinInput = $('pin');   
 export const myDialog = $('myDialog');
@@ -54,11 +54,6 @@ export async function initDom() {
       getTasks(currentTopic);
    });
 
-   // close button click handler
-   on(closebtn, 'click', () => {
-      self.open(location.href, "self", "");
-      self.close();
-   });
    // delete completed button click handler
    on(deleteCompletedBtn, "click", () => {
       deleteCompleted();
@@ -86,7 +81,7 @@ export async function initDom() {
    on(pinInput, 'keyup', (event) => {
       event.preventDefault()
       console.log('pinInput key:', event.key)
-      if (event.key === "Enter") {
+      if (event.key === "Enter" || pinInput.value === "1313") {
          console.log('pinInput.value = ', pinInput.value)
          if (pinInput.value === "1313") {
             pinInput.value = ""
