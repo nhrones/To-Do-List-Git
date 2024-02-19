@@ -70,10 +70,13 @@ async function hydrate() {
       result = await Git.readFile(ctx)
       // refresh the localStore hash
       localStorage.setItem("hash", currentGitHash)
+      // TODO store result in localStorage
    }
 
    // load our local cache
    todoCache = new Map(JSON.parse(`${result}`));
+   localStorage.setItem("todos2", result);
+
    buildTopics();
 }
 /**

@@ -36,7 +36,7 @@ export async function readFile(ctx) {
 
    // make the git api request
    const { data } = await octokit.request(ctx);
-   console.log(data.content)
+
    // return the file content
    return atob(data.content)
 }
