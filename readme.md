@@ -1,18 +1,7 @@
 ## Todo List App
 
 This simple app allows me to organize Todo-Tasks by subject and project.  
-
-### NOTE: 
-This client app requires a simple remote Kv-RPC Service.    
-See: https://github.com/nhrones/kv-ws-rpc   
-In DEV mode,(running from localhost), a local DenoKv-db will       
-be used. You'll need to run a local copy of the above service.    
-
-For production, simply copy this repo and the above service repo.    
-I like to run this client from Github.IO.    
-I Deploy the ServeKv to Deno Deploy.     
-You'll also need to change the `KV_URL` constant     
-in './src/context.ts`, to your own deploy url.
+The tasks are persisted to json.
 
 ### Client UI
 I've used a simple selectBox to select a project.    
@@ -41,7 +30,7 @@ The `Remove Completed` button on the bottom-right will delete any _checked_ task
 ### Todo Topics
 The dropdown box shows all current option groups and todo topics.    
 These are configurable by the user; see below.    
-The image above shows the `DWM-ReactiveUI` topic selected with it's current task list.    
+    
 
 ![Alt text](./media/select.png)
 
