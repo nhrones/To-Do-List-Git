@@ -75,7 +75,6 @@ async function hydrate() {
 
    // load our local cache
    todoCache = new Map(JSON.parse(`${result}`));
-   localStorage.setItem("todos2", result);
 
    buildTopics();
 }
