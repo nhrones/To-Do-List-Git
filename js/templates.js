@@ -1,7 +1,13 @@
 /**
+ * @typedef {Object} TodoItem 
+ * @property {boolean} disabled - is disabled (completed)
+ * @property {string} text - the task text
+ */
+
+/**
  * build a task element template string
  * @param {number} index
- * @param {{ disabled: any; text: any; }} item
+ * @param {TodoItem} item
  */
 export function taskTemplate(index, item) {
     const { disabled, text } = item;
