@@ -48,7 +48,7 @@ export function buildTopics() {
 }
 /**
  * parseTopics
- * @param topics - array
+ * @param {any} topics - array
  * @returns array
  */
 // deno-lint-ignore no-explicit-any
@@ -66,11 +66,18 @@ function parseTopics(topics) {
         const keyName = items[1].trim();
         newObj.title = title;
         newObj.key = keyName;
+        // @ts-ignore
         topicObject.entries[i - 1] = newObj;
     }
     return topicObject;
 }
-/** Save all tasks */
+/* Save all tasks */
+
+/**
+ * Save all tasks
+ * @export
+ * @param {boolean} topicChanged
+ */
 export function saveTasks(topicChanged) {
     setCache(thisKeyName, tasks, topicChanged);
 }
@@ -78,6 +85,7 @@ export function saveTasks(topicChanged) {
  * Delete completed tasks
  */
 export function deleteCompleted() {
+    /** @type {any[]} */
     const savedtasks = [];
     let numberDeleted = 0;
     tasks.forEach((task) => {
@@ -90,6 +98,8 @@ export function deleteCompleted() {
     });
     setTasks( savedtasks );
     saveTasks((currentTopic === 'topics'));
+    // @ts-ignore
     popupText.textContent = `Removed ${numberDeleted} tasks!`;
+    // @ts-ignore
     popupDialog.showModal();
 }

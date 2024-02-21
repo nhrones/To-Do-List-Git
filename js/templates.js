@@ -1,4 +1,8 @@
-/** build a task element template string */
+/**
+ * build a task element template string
+ * @param {number} index
+ * @param {{ disabled: any; text: any; }} item
+ */
 export function taskTemplate(index, item) {
     const { disabled, text } = item;
     return `

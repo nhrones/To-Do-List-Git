@@ -1,9 +1,13 @@
 
+// @ts-ignore
 import { Octokit } from "https://esm.sh/@octokit/rest";
 
 import { DEV } from './gitContext.js'
 
 const encoded = "5BfeT3Axkm6nMao99ag7oy4NiT2n7im8V5C9_phg"
+/**
+ * @param {string} str
+ */
 function decode(str) {
    return str.split("").reverse().join("");
 }
@@ -16,18 +20,18 @@ const octokit = new Octokit({
    auth: decode(encoded)
 });
 
-/** 
+/**
  * Returns the decoded string content of the target file.    
  * returns -- _github.com/Octocat/CatRepo/blob/main/cats.json_
- * @example 
- * ```js
- * ctx.owner = 'octocat'
- * ctx.repo = 'CatRepo'
- * ctx.path = 'cats.json'
- * const content = readFile(ctx)
- * // github.com/octocat/CatRepo/blob/main/cats.json
- * ```
- * @argument {ctx} Git-API context see: context.js
+ * @example ```js
+ctx.owner = 'octocat'
+ctx.repo = 'CatRepo'
+ctx.path = 'cats.json'
+const content = readFile(ctx)
+// github.com/octocat/CatRepo/blob/main/cats.json
+```
+ * @param {{ owner?: string; repo?: string; path?: string; url?: string; method: any; committer?: { name: string; email: string; }; message?: string; content?: string; headers?: { 'X-GitHub-Api-Version': string; // set the correct request method
+ }; sha?: string; }} ctx
  */
 export async function readFile(ctx) {
 
@@ -41,20 +45,21 @@ export async function readFile(ctx) {
    return atob(data.content)
 }
 
-/** 
- * @example 
- * ```js
- *    // set the API context - see: context.js
- *    ctx.owner = 'octocat'
- *    ctx.repo = 'CatRepo'
- *    ctx.path = 'cats.json'
- *    // base64 encode the content to be writen
- *    ctx.content = btoa(JSON.stringify([{name:"kitty"}]))
- *    // git-push the new file contents
- *    Git.writeFile(ctx).then((result) => {
- *       console.log(`Write status = ${result.status}`)
- *    })
- * ```
+/**
+ * @example ```js
+   // set the API context - see: context.js
+   ctx.owner = 'octocat'
+   ctx.repo = 'CatRepo'
+   ctx.path = 'cats.json'
+   // base64 encode the content to be writen
+   ctx.content = btoa(JSON.stringify([{name:"kitty"}]))
+   // git-push the new file contents
+   Git.writeFile(ctx).then((result) => {
+      console.log(`Write status = ${result.status}`)
+   })
+```
+ * @param {{ owner?: string; repo?: string; path?: string; url?: string; method: any; committer?: { name: string; email: string; }; message?: string; content: any; headers?: { 'X-GitHub-Api-Version': string; }; sha: any; }} ctx
+ * @param {string} rawContent
  */
 export async function writeFile(ctx, rawContent) {
 
@@ -74,8 +79,9 @@ export async function writeFile(ctx, rawContent) {
    return result.data.content.sha
 }
 
-/** 
- * Get the current git-hash of todo.json. 
+/**
+ * Get the current git-hash of todo.json.
+ * @param {{ owner?: string | undefined; repo?: string | undefined; path?: string | undefined; url?: string | undefined; method: any; committer?: { name: string; email: string; } | { name: string; email: string; } | undefined; message?: string | undefined; content?: any; headers?: { 'X-GitHub-Api-Version': string; } | { 'X-GitHub-Api-Version': string; } | undefined; sha?: any; }} ctx
  */
 export async function getCurrentHash(ctx) {
    

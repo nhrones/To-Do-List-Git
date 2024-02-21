@@ -17,7 +17,10 @@ export async function initCache() {
    return await hydrate();
 }
 
-/** restore our cache from a json backup */
+/**
+ * restore our cache from a json backup
+ * @param {string} records
+ */
 export function restoreCache(records) {
    const tasksObj = JSON.parse(records);
    todoCache = new Map(tasksObj);
@@ -25,7 +28,10 @@ export function restoreCache(records) {
    persist();
 }
 
-/** The `remove` method mutates - will call the `persist` method. */
+/**
+ * The `remove` method mutates - will call the `persist` method.
+ * @param {string} key
+ */
 export function removeFromCache(key) {
    const result = todoCache.delete(key);
    if (result === true) persist();
@@ -33,11 +39,16 @@ export function removeFromCache(key) {
 }
 
 /** The `get` method will not mutate records */
-export const getFromCache = (key) => {
+export const getFromCache = (/** @type {string} */ key) => {
    return todoCache.get(key);
 };
 
-/** The `set` method mutates - will call the `persist` method. */
+/**
+ * The `set` method mutates - will call the `persist` method.
+ * @param {string} key
+ * @param {any[]} value
+ * @param {boolean} topicChanged
+ */
 export function setCache(key, value, topicChanged = false) {
    todoCache.set(key, value);
    if (DEV) console.log('setCache calling persist')
@@ -85,7 +96,7 @@ async function hydrate() {
 async function persist() {
 
    // update git hash 
-   ctx.sha = Git.getCurrentHash(ctx)
+   ctx.sha = await Git.getCurrentHash(ctx)
    
    // get cache-Map entries as array
    const todoJson = JSON.stringify(Array.from(todoCache.entries()));
@@ -94,7 +105,7 @@ async function persist() {
    localStorage.setItem("todos", todoJson);
    
    // Write the cache to Github
-   const newHash = Git.writeFile(ctx, todoJson)
+   const newHash = await Git.writeFile(ctx, todoJson)
    
    // update local hash
    localStorage.setItem("hash", newHash);

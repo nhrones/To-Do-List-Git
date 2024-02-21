@@ -21,15 +21,21 @@ export function backupData() {
  * @export
  */
 export function restoreData() {
+   
+   /** @type {HTMLInputElement} */
+   // @ts-ignore
    const fileload = document.getElementById('fileload');
-   fileload.click();
-   fileload.addEventListener('change', function () {
+   fileload?.click();
+   fileload?.addEventListener('change', function () {
       const reader = new FileReader();
       reader.onload = function () {
          console.log('backup -> restoring')
+         // @ts-ignore
          restoreCache(reader.result);
          window.location.reload();
       };
-      reader.readAsText(fileload.files[0]);
+      if( fileload && fileload.files ) {
+         reader.readAsText(fileload.files[0]);
+      }
    });
 }
