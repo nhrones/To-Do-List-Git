@@ -2,7 +2,8 @@
 import { addTask, refreshDisplay } from './tasks.js';
 import { deleteCompleted, initDB, getTasks } from './db.js';
 import { backupData, restoreData } from './backup.js';
-// @ts-ignore
+
+
 import { DEV } from './gitContext.js'
 
 

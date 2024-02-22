@@ -14,9 +14,17 @@ import { DEV } from './gitContext.js'
 /**@type {string}*/
 let thisKeyName = ''
 
-/**
+/*
  * init Data
  * Hydrates cache data from IDB
+ */
+
+
+/**
+ * Hydrates cache data from IDB
+ * @export
+ * @async
+ * @returns {Promise<void>}
  */
 export async function initDB() {
     // hydrate from db
@@ -26,7 +34,7 @@ export async function initDB() {
 /**
  * Retrieve array of tasks from the service
  * or initialize an empty task array
- * @param {string} key the name of the record to fetch (data-key)
+ * @param {string} [key] optional name of the record to fetch (data-key)
  */
 export function getTasks(key = "") {
     thisKeyName = key;
