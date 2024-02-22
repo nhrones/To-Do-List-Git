@@ -1,11 +1,17 @@
+
 import { addOptionGroup, resetTopicSelect } from './selectBuilder.js';
 import { refreshDisplay, setTasks, tasks } from './tasks.js';
 import { currentTopic, popupText, popupDialog } from './dom.js';
 import { initCache, getFromCache, setCache } from './dbCache.js';
 import { DEV } from './gitContext.js'
 
+/** 
+ * db module
+ * @module DBModule - the db module
+ */
 
-/* @type {string} */
+
+/**@type {string}*/
 let thisKeyName = ''
 
 /**
@@ -25,6 +31,8 @@ export async function initDB() {
 export function getTasks(key = "") {
     thisKeyName = key;
     if (key.length) {
+      
+        /** @type {Array<string>} */
         let data = getFromCache(key) ?? [];
         if (data === null) {
             if (DEV)

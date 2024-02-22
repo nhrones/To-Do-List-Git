@@ -2,19 +2,29 @@
 import { addTask, refreshDisplay } from './tasks.js';
 import { deleteCompleted, initDB, getTasks } from './db.js';
 import { backupData, restoreData } from './backup.js';
+// @ts-ignore
 import { DEV } from './gitContext.js'
 
+
+/** @type {string} */
 export let currentTopic = "topics"
+
+/**
+ * @param {string} topic
+ */
 export function setCurrentTopic(topic){
    currentTopic = topic
 }
 
 /** Shortcut for document.getElementById */
-const $ = (id) => document.getElementById(id)
+const $ = (/** @type {string} */ id) => document.getElementById(id)
 
 /** on - adds an event handler to an htmlElement */
-const on = ( elem, event, listener) => {
-   return elem.addEventListener(event, listener)
+const on = ( 
+   /** @type {HTMLElement | null} */ elem, 
+   /** @type {string} */ event, 
+   /** @type {{ (evt: any): void; (): void; (): void; (event: any): void; (event: any): void; (evt: any): void; (event: any): void; (): void; (): void; }} */ listener) => {
+   return elem?.addEventListener(event, listener)
 }
 
 /* create references for all UI elements */
@@ -43,6 +53,7 @@ export async function initDom() {
       const { key } = evt;
       if (key === "Enter") {
          evt.preventDefault();
+         // @ts-ignore
          const tc = taskInput.value;
          if (tc.length > 0) {
             addTask(tc, currentTopic === 'topics');
@@ -51,6 +62,7 @@ export async function initDom() {
    });
    // topic select change handler
    on(topicSelect, 'change', () => {
+      // @ts-ignore
       setCurrentTopic( topicSelect.value.toLowerCase());
       getTasks(currentTopic);
    });
@@ -63,18 +75,24 @@ export async function initDom() {
 
    on(popupDialog, 'click', (event) => {
       event.preventDefault();
+      // @ts-ignore
       popupDialog.close();
    });
 
    on(popupDialog, 'close', (event) => {
       console.log('popupDialog close')
       event.preventDefault();
+      // @ts-ignore
       if (!pinOK) myDialog.showModal()
    });
 
+   // @ts-ignore
    on(popupDialog, "keyup", (evt) => {
+      // @ts-ignore
       event.preventDefault()
+      // @ts-ignore
       popupDialog.close()
+      // @ts-ignore
       if (!pinOK) myDialog.showModal()
    });
 
@@ -83,16 +101,24 @@ export async function initDom() {
       event.preventDefault()
       pinTryCount += 1
       console.log('pinInput key:', event.key)
+      // @ts-ignore
       if (event.key === "Enter" || pinInput.value === "1313") {
+         // @ts-ignore
          console.log('pinInput.value = ', pinInput.value)
+         // @ts-ignore
          if (pinInput.value === "1313") {
+            // @ts-ignore
             pinInput.value = ""
             pinOK = true
+            // @ts-ignore
             myDialog.close()
          } else {
+            // @ts-ignore
             myDialog.close()
+            // @ts-ignore
             pinInput.value = ""
             pinOK = false
+            // @ts-ignore
             popupText.textContent = (pinTryCount === 3)
                ?`Incorrect pin entered ${pinTryCount} times!
  Please close this Page!`
@@ -103,6 +129,7 @@ export async function initDom() {
                <h1>Three failed PIN attempts!</h1>
                <h1>Please close this page!</h1>`
              } else {
+               // @ts-ignore
                popupDialog.showModal()
                
              }
@@ -123,7 +150,9 @@ export async function initDom() {
 
    if (window.location.search !== '?ndh') {
       // initial pin input
+      // @ts-ignore
       myDialog.showModal()
+      // @ts-ignore
       pinInput.focus({ focusVisible: true })
    } else {
       pinOK = true
