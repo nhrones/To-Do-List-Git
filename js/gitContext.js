@@ -5,6 +5,7 @@
 export const DEV = true
 
 /** 
+ * GitContext Type
  * @typedef {Object} GitContext Standard option bag used by two Git-Requests 
  * @property {string} owner The github repo owner
  * @property {string} repo The github repo name
@@ -18,7 +19,8 @@ export const DEV = true
  * @property {string} sha SHA-1 file-hash -- set in gitPush.js
  */
 
-/**
+/** 
+ * Task Type 
  * @typedef {Object} TaskType
  * @property {boolean} disabled - is disabled (completed)
  * @property {string} text - the task text

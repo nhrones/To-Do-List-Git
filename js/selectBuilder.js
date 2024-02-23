@@ -1,6 +1,5 @@
 import { topicSelect } from './dom.js';
 export function resetTopicSelect() {
-    // @ts-ignore
     topicSelect.innerHTML = '<option value="" disabled selected hidden>Select A Todo Topic</option>';
 }
 /**
@@ -20,7 +19,6 @@ export function addOptionGroup(label, options) {
         optionElement.value = options[i].key || 'fuck';
         optionGroup.appendChild(optionElement);
     }
-    // @ts-ignore
     topicSelect.appendChild(optionGroup);
     return optionGroup;
 }

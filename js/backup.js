@@ -21,21 +21,22 @@ export function backupData() {
  * @export
  */
 export function restoreData() {
-   
-   /** @type {HTMLInputElement} */
-   // @ts-ignore
+
+   /** @type {HTMLElement | HTMLInputElement | null} */
    const fileload = document.getElementById('fileload');
-   fileload?.click();
-   fileload?.addEventListener('change', function () {
+   const fileloadInput = /** @type {HTMLInputElement} */  (fileload) // type coersion
+   fileloadInput.click();
+   fileloadInput.addEventListener('change', function () {
+      
+      /** @type {FileReader} */
       const reader = new FileReader();
       reader.onload = function () {
          console.log('backup -> restoring')
-         // @ts-ignore
-         restoreCache(reader.result);
+         restoreCache(/**@type{string}*/ (reader.result));
          window.location.reload();
       };
-      if( fileload && fileload.files ) {
-         reader.readAsText(fileload.files[0]);
+      if( fileload && fileloadInput.files ) {
+         reader.readAsText(fileloadInput.files[0]);
       }
    });
 }

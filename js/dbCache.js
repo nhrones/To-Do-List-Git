@@ -10,9 +10,18 @@ ctx.owner = 'nhrones'
 ctx.repo = 'TodoJson'
 ctx.path = 'todos.json'
 
+
+/**
+ * @type {Object.<String, String>}
+ */
 export let todoCache = new Map();
 
-/** db init - Hydrates the complete DB */
+/**
+ * db init - Hydrates the complete DB 
+ * @export
+ * @async
+ * @returns {Promise<void>}
+ */
 export async function initCache() {
    return await hydrate();
 }
@@ -60,11 +69,6 @@ export function setCache(key, value, topicChanged = false) {
 /** hydrate a dataset from a remote json file */
 async function hydrate() {
 
-   //TODO first load local
-   // next check hash for change
-   // if changed, load from git
-   // store new hash local
-
    // make a call to get our json data
    //const result = await Git.readFile(ctx)
    let result = localStorage.getItem("todos");
@@ -81,7 +85,6 @@ async function hydrate() {
       result = await Git.readFile(ctx)
       // refresh the localStore hash
       localStorage.setItem("hash", currentGitHash)
-      // TODO store result in localStorage
    }
 
    // load our local cache

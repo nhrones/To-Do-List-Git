@@ -62,7 +62,7 @@ export async function readFile(ctx) {
  * @param {string} rawContent
  */
 export async function writeFile(ctx, rawContent) {
-//TODO build typeDef for ctx
+
    // update our Git-context with the original file hash     
    ctx.sha = await getCurrentHash(ctx)
 

@@ -10,15 +10,8 @@ import { DEV } from './gitContext.js'
  * @module DBModule - the db module
  */
 
-
 /**@type {string}*/
 let thisKeyName = ''
-
-/*
- * init Data
- * Hydrates cache data from IDB
- */
-
 
 /**
  * Hydrates cache data from IDB
@@ -36,12 +29,12 @@ export async function initDB() {
  * or initialize an empty task array
  * @param {string} [key] optional name of the record to fetch (data-key)
  */
-export function getTasks(key = "") {
-    thisKeyName = key;
-    if (key.length) {
+export function getTasks(key) {
+    thisKeyName = key || "";
+    if (thisKeyName.length) {
       
         /** @type {Array<string>} */
-        let data = getFromCache(key) ?? [];
+        let data = getFromCache(thisKeyName) ?? [];
         if (data === null) {
             if (DEV)
                 console.log(`No data found for ${thisKeyName}`);
@@ -56,6 +49,7 @@ export function getTasks(key = "") {
  * build a set of select options
  */
 export function buildTopics() {
+   /** @type {Array<string>} */
     const data = getFromCache("topics");
     resetTopicSelect();
     for (let i = 0; i < data.length; i++) {
@@ -65,7 +59,7 @@ export function buildTopics() {
 }
 /**
  * parseTopics
- * @param {any} topics - array
+ * @param {*} topics 
  * @returns array
  */
 // deno-lint-ignore no-explicit-any
@@ -88,7 +82,6 @@ function parseTopics(topics) {
     }
     return topicObject;
 }
-/* Save all tasks */
 
 /**
  * Save all tasks
@@ -98,24 +91,25 @@ function parseTopics(topics) {
 export function saveTasks(topicChanged) {
     setCache(thisKeyName, tasks, topicChanged);
 }
+
+/**@typedef {{disabled: boolean, text: string}} Task*/
 /**
  * Delete completed tasks
  */
 export function deleteCompleted() {
-    /** @type {any[]} */
+    /** @type {Task[]} */
     const savedtasks = [];
     let numberDeleted = 0;
-    tasks.forEach((task) => {
+    tasks.forEach((/**@type {Task} */ task) => {
         if (task.disabled === false) {
             savedtasks.push(task);
-        }
-        else {
+        } else {
             numberDeleted++;
         }
     });
     setTasks( savedtasks );
     saveTasks((currentTopic === 'topics'));
-    // @ts-ignore
+ 
     popupText.textContent = `Removed ${numberDeleted} tasks!`;
     // @ts-ignore
     popupDialog.showModal();
