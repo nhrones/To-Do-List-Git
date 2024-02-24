@@ -8,6 +8,7 @@ import { DEV } from './gitContext.js'
 /** 
  * db module
  * @module DBModule - the db module
+ * @description - The db module (db.js) is responsible for communicating with the persistance layer.
  */
 
 /**@type {string}*/
