@@ -4,7 +4,7 @@ import { Octokit } from "https://esm.sh/@octokit/rest";
 
 import { DEV } from './gitContext.js'
 
-const encoded = "5BfeT3Axkm6nMao99ag7oy4NiT2n7im8V5C9_phg"
+const encoded = "SwU1T4ymgdQwpzDXXoLCCIIK6lJJYySV1Bzq_phg" 
 /**
  * @param {string} str
  */
