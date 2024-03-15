@@ -4,7 +4,7 @@ import { refreshDisplay, setTasks, tasks } from './tasks.js';
 import { currentTopic, popupText, popupDialog } from './dom.js';
 import { initCache, getFromCache, setCache } from './dbCache.js';
 import { DEV } from './gitContext.js'
-
+import { restoreData } from './backup.js'
 /** 
  * db module
  * @module DBModule - the db module
@@ -21,8 +21,8 @@ let thisKeyName = ''
  * @returns {Promise<void>}
  */
 export async function initDB() {
-    // hydrate from db
-    await initCache();
+   // hydrate from db
+   await initCache();
 }
 
 /**
@@ -31,19 +31,19 @@ export async function initDB() {
  * @param {string} [key] optional name of the record to fetch (data-key)
  */
 export function getTasks(key) {
-    thisKeyName = key || "";
-    if (thisKeyName.length) {
-      
-        /** @type {Array<string>} */
-        let data = getFromCache(thisKeyName) ?? [];
-        if (data === null) {
-            if (DEV)
-                console.log(`No data found for ${thisKeyName}`);
-            data = [];
-        }
-        setTasks ( data );
-        refreshDisplay();
-    }
+   thisKeyName = key || "";
+   if (thisKeyName.length) {
+
+      /** @type {Array<string>} */
+      let data = getFromCache(thisKeyName) ?? [];
+      if (data === null) {
+         if (DEV)
+            console.log(`No data found for ${thisKeyName}`);
+         data = [];
+      }
+      setTasks(data);
+      refreshDisplay();
+   }
 }
 
 /**
@@ -51,12 +51,16 @@ export function getTasks(key) {
  */
 export function buildTopics() {
    /** @type {Array<string>} */
-    const data = getFromCache("topics");
-    resetTopicSelect();
-    for (let i = 0; i < data.length; i++) {
-        const parsedTopics = parseTopics(data[i]);
-        addOptionGroup(parsedTopics.group, parsedTopics.entries);
-    }
+   const data = getFromCache("topics");
+   resetTopicSelect();
+   if (data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+         const parsedTopics = parseTopics(data[i]);
+         addOptionGroup(parsedTopics.group, parsedTopics.entries);
+      }
+   } else {
+      restoreData()
+   }
 }
 /**
  * parseTopics
@@ -65,23 +69,23 @@ export function buildTopics() {
  */
 // deno-lint-ignore no-explicit-any
 function parseTopics(topics) {
-    const topicObject = { group: "", entries: [] };
-    const thisTopic = topics;
-    const txt = thisTopic.text;
-    const lines = txt.split('\n');
-    topicObject.group = lines[0].trim();
-    for (let i = 1; i < lines.length; i++) {
-        const newObj = { title: "", key: "" };
-        const element = lines[i];
-        const items = element.split(',');
-        const title = items[0];
-        const keyName = items[1].trim();
-        newObj.title = title;
-        newObj.key = keyName;
-        // @ts-ignore
-        topicObject.entries[i - 1] = newObj;
-    }
-    return topicObject;
+   const topicObject = { group: "", entries: [] };
+   const thisTopic = topics;
+   const txt = thisTopic.text;
+   const lines = txt.split('\n');
+   topicObject.group = lines[0].trim();
+   for (let i = 1; i < lines.length; i++) {
+      const newObj = { title: "", key: "" };
+      const element = lines[i];
+      const items = element.split(',');
+      const title = items[0];
+      const keyName = items[1].trim();
+      newObj.title = title;
+      newObj.key = keyName;
+      // @ts-ignore
+      topicObject.entries[i - 1] = newObj;
+   }
+   return topicObject;
 }
 
 /**
@@ -90,7 +94,7 @@ function parseTopics(topics) {
  * @param {boolean} topicChanged
  */
 export function saveTasks(topicChanged) {
-    setCache(thisKeyName, tasks, topicChanged);
+   setCache(thisKeyName, tasks, topicChanged);
 }
 
 /**@typedef {{disabled: boolean, text: string}} Task*/
@@ -98,20 +102,20 @@ export function saveTasks(topicChanged) {
  * Delete completed tasks
  */
 export function deleteCompleted() {
-    /** @type {Task[]} */
-    const savedtasks = [];
-    let numberDeleted = 0;
-    tasks.forEach((/**@type {Task} */ task) => {
-        if (task.disabled === false) {
-            savedtasks.push(task);
-        } else {
-            numberDeleted++;
-        }
-    });
-    setTasks( savedtasks );
-    saveTasks((currentTopic === 'topics'));
- 
-    popupText.textContent = `Removed ${numberDeleted} tasks!`;
-    // @ts-ignore
-    popupDialog.showModal();
+   /** @type {Task[]} */
+   const savedtasks = [];
+   let numberDeleted = 0;
+   tasks.forEach((/**@type {Task} */ task) => {
+      if (task.disabled === false) {
+         savedtasks.push(task);
+      } else {
+         numberDeleted++;
+      }
+   });
+   setTasks(savedtasks);
+   saveTasks((currentTopic === 'topics'));
+
+   popupText.textContent = `Removed ${numberDeleted} tasks!`;
+   // @ts-ignore
+   popupDialog.showModal();
 }
