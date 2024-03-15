@@ -53,7 +53,7 @@ export function buildTopics() {
    /** @type {Array<string>} */
    const data = getFromCache("topics");
    resetTopicSelect();
-   if (data.length > 0) {
+   if (data && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
          const parsedTopics = parseTopics(data[i]);
          addOptionGroup(parsedTopics.group, parsedTopics.entries);
